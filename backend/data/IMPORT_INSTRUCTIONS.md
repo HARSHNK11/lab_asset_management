@@ -5,7 +5,12 @@
 - `DSE.docx` - Data Science Engineering lab assets  
 - `ICT.docx` - Information and Communication Technology lab assets
 
-## Import Commands:
+## Import Commands
+
+The predefined CSE, DSE, and ICT documents are now read from the private GCS
+objects configured by `GCS_CSE_FILE`, `GCS_DSE_FILE`, and `GCS_ICT_FILE`.
+Configure those variables in `backend/.env` and authenticate with Google
+Application Default Credentials before running these commands.
 
 ### Import CSE Excel file:
 ```bash
@@ -13,7 +18,8 @@ npm run import:cse
 ```
 Or with custom path:
 ```bash
-npm run import:cse data/CSE.xlsx
+npm run test:gcs
+npm run import:cse
 ```
 
 ### Import DSE Word document:
@@ -22,7 +28,7 @@ npm run import:dse
 ```
 Or with custom path:
 ```bash
-npm run import:dse data/DSE.docx
+npm run import:dse
 ```
 
 ### Import ICT Word document:
@@ -31,7 +37,7 @@ npm run import:ict
 ```
 Or with custom path:
 ```bash
-npm run import:ict data/ICT.docx
+npm run import:ict
 ```
 
 ## Import All Files:
@@ -47,4 +53,3 @@ npm run import:ict
 - Lab codes will be normalized (spaces removed, uppercase)
 - Assets will be linked to their respective labs
 - Duplicate labs/assets will be updated (upsert) rather than creating duplicates
-

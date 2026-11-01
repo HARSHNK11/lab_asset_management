@@ -3,15 +3,17 @@ import dotenv from "dotenv";
 import mammoth from "mammoth";
 import Lab from "../models/Lab.js";
 import Asset from "../models/Asset.js";
+import { getFileFromGCS } from "../services/cloudStorage.js";
 
 dotenv.config();
 
-async function importICT(filePath) {
+async function importICT() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log("Connected to MongoDB");
 
-    const result = await mammoth.extractRawText({ path: filePath });
+    const buffer = await getFileFromGCS("GCS_ICT_FILE");
+    const result = await mammoth.extractRawText({ buffer });
     const lines = result.value
       .split("\n")
       .map(l => l.trim())
@@ -161,5 +163,4 @@ async function importICT(filePath) {
   }
 }
 
-const filePath = process.argv[2] || "./data/ICT.docx";
-importICT(filePath);
+importICT();

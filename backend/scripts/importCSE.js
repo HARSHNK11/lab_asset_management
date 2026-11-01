@@ -3,16 +3,18 @@ import dotenv from "dotenv";
 import ExcelJS from "exceljs";
 import Lab from "../models/Lab.js";
 import Asset from "../models/Asset.js";
+import { getFileFromGCS } from "../services/cloudStorage.js";
 
 dotenv.config();
 
-async function importCSE(filePath) {
+async function importCSE() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log("Connected to MongoDB");
 
     const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.readFile(filePath);
+    const buffer = await getFileFromGCS("GCS_CSE_FILE");
+    await workbook.xlsx.load(buffer);
     const worksheet = workbook.getWorksheet(1);
 
     let labsCreated = 0;
@@ -129,5 +131,4 @@ async function importCSE(filePath) {
   }
 }
 
-const filePath = process.argv[2] || "./data/CSE.xlsx";
-importCSE(filePath);
+importCSE();

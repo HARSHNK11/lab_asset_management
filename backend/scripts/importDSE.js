@@ -3,15 +3,17 @@ import dotenv from "dotenv";
 import mammoth from "mammoth";
 import Lab from "../models/Lab.js";
 import Asset from "../models/Asset.js";
+import { getFileFromGCS } from "../services/cloudStorage.js";
 
 dotenv.config();
 
-async function importDSE(filePath) {
+async function importDSE() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log("Connected to MongoDB");
 
-    const result = await mammoth.extractRawText({ path: filePath });
+    const buffer = await getFileFromGCS("GCS_DSE_FILE");
+    const result = await mammoth.extractRawText({ buffer });
     const text = result.value;
 
     const lines = text
@@ -171,5 +173,4 @@ async function importDSE(filePath) {
   }
 }
 
-const filePath = process.argv[2] || "./data/DSE.docx";
-importDSE(filePath);
+importDSE();
